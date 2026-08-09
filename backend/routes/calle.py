@@ -12,8 +12,8 @@ router = APIRouter(prefix="/api/v1/calle", tags=["CALL-E"])
 # PLACEHOLDER DATA
 # ==================================================
 # TODO: Replace PLACEHOLDER_PATIENT_PHONE with real data from patient database. Must be E.164 format.
-PLACEHOLDER_PATIENT_PHONE = "+917306585872"
-PLACEHOLDER_PATIENT_NAME = "Shone" 
+PLACEHOLDER_PATIENT_PHONE = "+919074797923"
+PLACEHOLDER_PATIENT_NAME = "Shahmas" 
 PLACEHOLDER_PATIENT_ID = "PLACEHOLDER_PATIENT_ID"
 
 WEBHOOK_URL = os.getenv("WEBHOOK_URL", "https://example.com/api/v1/calle/webhook")
@@ -36,7 +36,7 @@ def trigger_call():
         )
         
     # Generate idempotency key tied to predictable business logic, not a random UUID per retry.
-    idempotency_key = f"{PLACEHOLDER_PATIENT_ID}:day_1:followup:v2"
+    idempotency_key = f"{PLACEHOLDER_PATIENT_ID}:day_1:followup:v3"
     
     # We omit 'recipients' passing phone via task text directly so CALL-E infers it
     task_prompt = (
