@@ -36,7 +36,7 @@ def trigger_call():
         )
         
     # Generate idempotency key tied to predictable business logic, not a random UUID per retry.
-    idempotency_key = f"{PLACEHOLDER_PATIENT_ID}:day_1:followup:v2"
+    idempotency_key = f"{PLACEHOLDER_PATIENT_ID}:day_1:followup:v67"
     
     # We omit 'recipients' passing phone via task text directly so CALL-E infers it
     task_prompt = (
