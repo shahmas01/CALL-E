@@ -3,3 +3,6 @@ uvicorn>=0.27.1
 calle-ai
 python-dotenv>=1.0.1
 pydantic>=2.9.0
+supabase
+pandas
+scikit-learn
