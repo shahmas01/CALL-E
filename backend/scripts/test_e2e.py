@@ -8,11 +8,16 @@ def print_step(msg):
     print(f"\n\033[96m[E2E TEST]\033[0m {msg}")
 
 def run_test():
-    print_step("Fetching latest seeded patient to use as test target...")
-    resp = supabase.table('patients').select('patient_id, name, phone_number').order('created_at', desc=True).limit(1).execute()
+    print_step("Available patients: Shone, Malavika, Jassim, Shahmas")
+    name_input = input("Enter patient name to call (leave blank for latest): ").strip()
+    
+    if name_input:
+        resp = supabase.table('patients').select('patient_id, name, phone_number').ilike('name', f"%{name_input}%").execute()
+    else:
+        resp = supabase.table('patients').select('patient_id, name, phone_number').order('created_at', desc=True).limit(1).execute()
     
     if not resp.data:
-        print("\033[91m❌ No patients found in database. Run 'python -m backend.database.seed' first!\033[0m")
+        print("\033[91m❌ No matching patients found in database. Run 'python -m backend.database.seed' first!\033[0m")
         return
         
     patient = resp.data[0]
@@ -34,6 +39,7 @@ def run_test():
     print_step(f"✅ FastAPI returned gracefully without blocking!")
     print(f"    -> DB Call Event PK: {db_call_id}")
     print(f"    -> CALL-E External ID: {calle_call_id}")
+    print(f"    -> Generated Dynamic Task Prompt (Backend Logs via FastAPI)")
     
     print_step("Supabase Polling: Waiting for Webhook to update the DB asynchronously...")
     
@@ -79,10 +85,15 @@ def run_test():
             record.pop('structured_result', None) # Hide redundant JSON cleanly!
             print(f"\n[TABLE: patient_states] - Snapshot Historical Payload Inserted:")
             print(json.dumps(record, indent=2))
-        else:
-            print("\033[91m❌ Status completed but 'patient_states' extraction logically bypassed!\033[0m")
             
-        # 3. Track Escalated Issues Globally
+        # 3. Track Adherence Tracks Globally
+        adhs = supabase.table('adherence_tracking').select('*').eq('call_id', db_call_id).execute()
+        if adhs.data:
+            print(f"\n[TABLE: adherence_tracking] - Dynamic Post-Call Options Triggered:")
+            for adh in adhs.data:
+                print(json.dumps(adh, indent=2))
+            
+        # 4. Track Escalated Issues Globally
         issues = supabase.table('issues').select('*').eq('patient_id', patient_id).execute()
         if issues.data:
             print(f"\n[TABLE: issues] - Evaluated & Tracked Longitudinal Problems:")

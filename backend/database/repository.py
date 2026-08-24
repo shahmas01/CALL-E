@@ -64,3 +64,33 @@ def create_or_update_issue(patient_id: str, call_id: str, description: str):
         }
         supabase.table('issues').insert([data]).execute()
         return data["id"]
+
+def get_patient_medications(patient_id: str):
+    resp = supabase.table('medications_prescribed').select('*').eq('patient_id', patient_id).execute()
+    return resp.data
+
+def get_patient_diagnoses(patient_id: str):
+    resp = supabase.table('diagnoses').select('*').eq('patient_id', patient_id).execute()
+    return resp.data
+
+def get_patient_open_issues(patient_id: str):
+    resp = supabase.table('issues').select('*').eq('patient_id', patient_id).eq('status', 'open').execute()
+    return resp.data
+
+def get_recent_patient_states(patient_id: str, limit: int = 3):
+    resp = supabase.table('patient_states').select('*').eq('patient_id', patient_id).order('created_at', desc=True).limit(limit).execute()
+    return resp.data if resp.data else []
+
+def insert_adherence_tracking(patient_id: str, call_id: str, med_name: str, status: str):
+    data = {
+        "adherence_id": str(uuid.uuid4()),
+        "patient_id": patient_id,
+        "call_id": call_id,
+        "medication_name": med_name,
+        "adherence_status": status,
+        "created_at": datetime.now().isoformat()
+    }
+    supabase.table('adherence_tracking').insert([data]).execute()
+
+def update_issue_status(issue_id: str, status: str):
+    supabase.table('issues').update({"status": status, "last_updated_at": datetime.now().isoformat()}).eq('id', issue_id).execute()
