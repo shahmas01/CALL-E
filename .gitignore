@@ -2,3 +2,10 @@
 context.md
 calle_api.md
 db_schema.md
+data.md
+err.txt
+inspect_db.py
+run_seed.py
+seed_out.txt
+webhooks_logs.txt
+webhook_logs.txt
