@@ -12,8 +12,8 @@ router = APIRouter(prefix="/api/v1/calle", tags=["CALL-E"])
 # PLACEHOLDER DATA
 # ==================================================
 # TODO: Replace PLACEHOLDER_PATIENT_PHONE with real data from patient database. Must be E.164 format.
-PLACEHOLDER_PATIENT_PHONE = "+919037996402"
-PLACEHOLDER_PATIENT_NAME = "Shone" 
+PLACEHOLDER_PATIENT_PHONE = "+918075589464"
+PLACEHOLDER_PATIENT_NAME = "Malavika" 
 PLACEHOLDER_PATIENT_ID = "PLACEHOLDER_PATIENT_ID"
 
 WEBHOOK_URL = os.getenv("WEBHOOK_URL", "https://example.com/api/v1/calle/webhook")
@@ -40,31 +40,223 @@ def trigger_call():
     
     # We omit 'recipients' passing phone via task text directly so CALL-E infers it
     task_prompt = (
-        f"Call {PLACEHOLDER_PATIENT_PHONE} and politely ask them how they are feeling after being discharged. "
-        "Ask if they have any new or worsening symptoms. Also determine if they are taking their prescribed medication. "
-        f"Address the patient as {PLACEHOLDER_PATIENT_NAME}."
-    )
+    f"Call {PLACEHOLDER_PATIENT_PHONE} and politely ask "
+    f"{PLACEHOLDER_PATIENT_NAME} how they are feeling after being discharged. "
+
+    "Ask about their overall recovery and whether they are "
+    "improving, stable, or getting worse. "
+
+    "Ask whether they have any new symptoms or whether any "
+    "existing symptoms have become worse. If they report symptoms, "
+    "briefly ask what they are experiencing. "
+
+    "Ask whether they were able to obtain all of their prescribed "
+    "medications and whether they are taking them as instructed. "
+
+    "Ask whether they have missed any doses, had difficulty with "
+    "dose or timing, experienced medication side effects, or are "
+    "confused about any medication. "
+
+    "Ask whether they have any difficulty obtaining or refilling "
+    "their medicines, including financial difficulties. "
+
+    "Ask whether they have a caregiver or family member available "
+    "to help them at home. "
+
+    "Ask whether transportation is causing difficulty with "
+    "follow-up appointments or accessing healthcare. "
+
+    "Ask one question at a time and keep the conversation short "
+    "and easy to understand. Allow the patient to explain their "
+    "situation naturally. "
+
+    "If the patient is uncertain about an answer, do not guess. "
+    "Record the information as unknown. "
+
+    "Do not diagnose the patient and do not recommend changing "
+    "or stopping any medication. Medication concerns should be "
+    "referred to an authorized clinician or pharmacist. "
+
+    "If the patient reports a potentially serious or urgent "
+    "problem, follow the appropriate emergency escalation "
+    "protocol and mark the case for human clinical review. "
+
+    "Thank the patient at the end of the conversation and end "
+    "the call safely."
+)
     
     result_schema = {
-        "type": "object",
-        "required": ["recovery_status", "has_new_symptoms", "medication_adherence"],
-        "properties": {
-            "recovery_status": {
-                "type": "string",
-                "enum": ["improving", "stable", "worsening", "unknown"],
-                "description": "How the patient's recovery is progressing."
-            },
-            "has_new_symptoms": {
-                "type": "string",
-                "enum": ["yes", "no", "unknown"],
-            },
-            "medication_adherence": {
-                "type": "string",
-                "enum": ["taking_all", "missing_some", "not_taking", "unknown"],
-            }
+    "type": "object",
+
+    "required": [
+        "recovery_status",
+        "has_new_symptoms",
+        "medication_adherence",
+        "medication_obtained",
+        "missed_doses",
+        "medication_side_effects",
+        "medication_confusion",
+        "medication_access_issue",
+        "caregiver_available",
+        "transportation_issue",
+        "financial_barrier",
+        "needs_human_review",
+        "urgent_concern"
+    ],
+
+    "properties": {
+
+        # Recovery
+        "recovery_status": {
+            "type": "string",
+            "enum": [
+                "improving",
+                "stable",
+                "worsening",
+                "unknown"
+            ],
+            "description": "How the patient's recovery is progressing."
         },
-        "additionalProperties": False,
-    }
+
+        # Symptoms
+        "has_new_symptoms": {
+            "type": "string",
+            "enum": [
+                "yes",
+                "no",
+                "unknown"
+            ],
+            "description": "Whether the patient has new symptoms."
+        },
+
+        "symptom_details": {
+            "type": "string",
+            "description": "Brief description of any symptoms reported by the patient."
+        },
+
+        # Medication
+        "medication_adherence": {
+            "type": "string",
+            "enum": [
+                "taking_all",
+                "missing_some",
+                "not_taking",
+                "unknown"
+            ],
+            "description": "Whether the patient is taking medication as instructed."
+        },
+
+        "medication_obtained": {
+            "type": "string",
+            "enum": [
+                "yes",
+                "no",
+                "partial",
+                "unknown"
+            ],
+            "description": "Whether the patient obtained their prescribed medicines."
+        },
+
+        "missed_doses": {
+            "type": "string",
+            "enum": [
+                "yes",
+                "no",
+                "unknown"
+            ],
+            "description": "Whether the patient has missed any medication doses."
+        },
+
+        "medication_side_effects": {
+            "type": "string",
+            "enum": [
+                "yes",
+                "no",
+                "unknown"
+            ],
+            "description": "Whether the patient reports medication side effects."
+        },
+
+        "side_effect_details": {
+            "type": "string",
+            "description": "Brief description of any medication side effects reported."
+        },
+
+        "medication_confusion": {
+            "type": "string",
+            "enum": [
+                "yes",
+                "no",
+                "unknown"
+            ],
+            "description": "Whether the patient is confused about their medication."
+        },
+
+        "medication_access_issue": {
+            "type": "string",
+            "enum": [
+                "yes",
+                "no",
+                "unknown"
+            ],
+            "description": "Whether the patient has difficulty obtaining or refilling medication."
+        },
+
+        # Social and support
+        "caregiver_available": {
+            "type": "string",
+            "enum": [
+                "yes",
+                "no",
+                "unknown"
+            ],
+            "description": "Whether a caregiver or family member is available to help."
+        },
+
+        "transportation_issue": {
+            "type": "string",
+            "enum": [
+                "yes",
+                "no",
+                "unknown"
+            ],
+            "description": "Whether transportation is a barrier to healthcare or appointments."
+        },
+
+        "financial_barrier": {
+            "type": "string",
+            "enum": [
+                "yes",
+                "no",
+                "unknown"
+            ],
+            "description": "Whether financial difficulties affect access to medication or care."
+        },
+
+        # Escalation
+        "needs_human_review": {
+            "type": "string",
+            "enum": [
+                "yes",
+                "no",
+                "unknown"
+            ],
+            "description": "Whether the patient's situation should be reviewed by a human clinician."
+        },
+
+        "urgent_concern": {
+            "type": "string",
+            "enum": [
+                "yes",
+                "no",
+                "unknown"
+            ],
+            "description": "Whether the patient reported a potentially urgent concern."
+        }
+    },
+
+    "additionalProperties": False
+}
 
     try:
         # Non-blocking SDK call
