@@ -91,55 +91,7 @@ export default function PatientLayout() {
         <Outlet />
       </main>
 
-      {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40">
-
-        <div className="max-w-full mx-auto px-8">
-
-          <div className="flex items-center justify-between">
-
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-
-              return (
-                <NavLink
-                  key={tab.path}
-                  to={`/patient/${patientId}/${tab.path}`}
-                  className={({ isActive }) =>
-                    `relative flex-1 flex flex-col items-center justify-center
-                    py-4 text-xs transition-all duration-200
-                    ${
-                      isActive
-                        ? "text-green-600 font-medium"
-                        : "text-gray-500 hover:text-gray-800"
-                    }`
-                  }
-                >
-
-                  {({ isActive }) => (
-                    <>
-                      <Icon
-                        size={18}
-                        strokeWidth={isActive ? 2.5 : 1.8}
-                      />
-
-                      <span className="mt-1">
-                        {tab.name}
-                      </span>
-
-                      {isActive && (
-                        <span className="absolute bottom-0 left-1/4 right-1/4 h-0.5 bg-green-600 rounded-full" />
-                      )}
-                    </>
-                  )}
-
-                </NavLink>
-              );
-            })}
-
-          </div>
-        </div>
-      </div>
+      
 
     </div>
   );
