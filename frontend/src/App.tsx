@@ -7,79 +7,159 @@ import Alerts from "./pages/patient/Alerts";
 import Features from "./pages/patient/Features";
 import CarePlan from "./pages/patient/CarePlan";
 import Documents from "./pages/patient/Document";
+import Login from "./pages/Login";
 
 import { useState } from 'react'
 import type { ReactNode } from 'react'
 import { BrowserRouter, useNavigate } from 'react-router-dom' 
 
 import {
-  Menu, Activity, Bell, FileText, Headphones, Home, LogOut, Settings, Users, ChevronDown, Search, ShieldPlus, X,
+  Menu, Activity, Bell, FileText,  Home, LogOut, Settings, Users, ChevronDown, Search, ShieldPlus, X,
   Phone, FilePenLine, MoreVertical, UserRound, Maximize2, Minimize2, } from 'lucide-react'
 
-function Header({ onMenuClick }: { onMenuClick: () => void })
- {
+function Header({
+  onMenuClick,
+  profileOpen,
+  setProfileOpen,
+  onLogout,
+}: {
+  onMenuClick: () => void;
+  profileOpen: boolean;
+  setProfileOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onLogout: () => void;
+}) {
   return (
-<header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-gray-200 bg-white px-6">
-
+ <header className="
+  sticky top-0 z-50
+  flex h-16 items-center justify-between
+  border-b border-white/10
+  bg-[#064E3B]
+  px-3 sm:px-4 lg:px-6
+">
   {/* LEFT - Menu + Logo + Title */}
-  <div className="flex items-center gap-3">
+ <div className="flex min-w-0 items-center gap-2 sm:gap-3">
 
     {/* MENU BUTTON */}
     <button
       onClick={onMenuClick}
-      className="rounded-md p-2 text-gray-600 hover:bg-gray-100">
+      className="rounded-md p-2 text-white hover:bg-transparent
+      ">
       <Menu size={22} />
     </button>
 
         {/* Shield Icon */}
-        <div className="flex h-10 w-10 items-center justify-center">
-          <ShieldPlus size={30} strokeWidth={2} className="text-green-700"/>
-        </div>
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center sm:h-10 sm:w-10">
+  <ShieldPlus
+    size={40}
+    strokeWidth={2}
+    className="text-white sm:h-[46px] sm:w-[46px]"
+  />
+</div>
 
         {/* Title */}
         <div>
-          <h1 className="text-[16px] font-semibold text-gray-800"> AI Post-Discharge Monitoring </h1>
-          <p className="text-[11px] text-gray-500"> Real-time insights. Better outcomes. </p>
+          <h1 className="
+  font-anton font-bold
+  text-[17px] leading-tight
+  tracking-wide text-white
+  sm:text-[21px]
+  lg:text-[25px]
+"></h1>
+           <p className="text-[11px] text-emerald-100 sm:block"> Real-time insights. Better outcomes. </p>
         </div>
 
   </div>
 
       {/* RIGHT SIDE */}
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-1 sm:gap-3 lg:gap-6">
 
-        {/* Search */}
-        <div className="flex h-9 w-72 items-center gap-2 rounded-md border border-gray-200 bg-white px-3">
+        
+ 
+ <div className="relative">
 
-          <Search size={16}  className="text-gray-500" />
-          <input
-            type="text"
-            placeholder="Search patients, ID, or keywords..."
-            className="w-full bg-transparent text-xs text-gray-700 outline-none placeholder:text-gray-400" />
-        </div>
+  {/* Profile Button */}
+  <button
+    onClick={() => setProfileOpen(!profileOpen)}
+    className="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-white/10"
+  >
 
-        {/* Notification */}
-        <div className="relative cursor-pointer">
-          <Bell size={20} className="text-gray-700"/>
-          {/* Notification number */}
-          <span className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-green-700 px-1 text-[9px] font-semibold text-white">
-            12 </span>
-        </div>
+    <img
+  src="https://i.pravatar.cc/100?img=47"
+  alt="Profile"
+  className="h-10 w-10 rounded-full object-cover"
+/>
 
-        {/* Doctor Profile */}
-        <div className="flex items-center gap-3">
-          {/* Profile image */}
-          <img
-            src="https://i.pravatar.cc/100?img=47"
-            alt="Dr. Sarah Davis"
-            className="h-9 w-9 rounded-full object-cover"/>
-          {/* Name + Role */}
-          <div className="leading-tight">
-            <p className="text-xs font-semibold text-gray-800"> Dr. Sarah Davis </p>
-            <p className="text-[10px] text-gray-500"> Care Team</p>
-          </div>
-          {/* Dropdown */}
-          <ChevronDown size={15} className="ml-2 text-gray-600" />
-        </div>
+    {/* Profile Text */}
+    <div className="hidden text-left leading-tight sm:block">
+      <p className="text-[13px] font-semibold text-white">
+        JS healthcare
+      </p>
+
+      <p className="mt-0.5 text-[11px] text-emerald-100">
+        Care Team
+      </p>
+    </div>
+
+    {/* Arrow */}
+    <ChevronDown
+      size={17}
+      className={`ml-2 text-white transition-transform ${
+        profileOpen ? "rotate-180" : ""
+      }`}
+    />
+
+  </button>
+
+
+  {/* ================= DROPDOWN ================= */}
+  {profileOpen && (
+    <div
+      className="
+        absolute right-0 top-[58px] z-50
+        w-[190px]
+        overflow-hidden
+        rounded-xl
+        border border-gray-200
+        bg-white
+        shadow-lg
+      "
+    >
+
+      {/* Account Info */}
+      <div className="border-b border-gray-100 px-4 py-3">
+        <p className="text-[13px] font-semibold text-gray-900">
+          JS healthcare
+        </p>
+
+        <p className="mt-1 text-[11px] text-gray-500">
+          Care Team
+        </p>
+      </div>
+
+
+      {/* Logout */}
+      <button
+       onClick={onLogout}
+        className="
+          flex w-full items-center gap-3
+          px-4 py-3
+          text-left
+          text-[13px]
+          font-medium
+          text-red-600
+          transition
+          hover:bg-red-50
+        "
+      >
+        <LogOut size={17} />
+
+        <span>Logout</span>
+      </button>
+
+    </div>
+  )}
+
+</div>
 
       </div>
 
@@ -507,6 +587,8 @@ const patients = [
 ]
 
 function Dashboard() {
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("risk")
   const [patientsExpanded, setPatientsExpanded] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -514,31 +596,45 @@ function Dashboard() {
 
   const navigate = useNavigate()
 
-const sortedPatients = [...patients].sort((a, b) => {
+const filteredPatients = patients.filter((patient) => {
+  const search = searchTerm.toLowerCase().trim();
+
+  if (!search) return true;
+
+  return (
+    patient.name?.toLowerCase().includes(search) ||
+    patient.id?.toLowerCase().includes(search) 
+   );
+});
+
+const sortedPatients = [...filteredPatients].sort((a, b) => {
   switch (sortBy) {
     case "recent":
-      return a.days - b.days
+      return a.days - b.days;
 
     case "medication":
-      return a.medication - b.medication
+      return b.medication - a.medication;
 
-    case "symptoms":
-      const symptomOrder: Record<string, number> = {
+    case "symptoms": {
+      const symptomOrder = {
         Worsening: 3,
         Stable: 2,
         Improving: 1,
-      }
+      };
 
-      return symptomOrder[b.symptoms] - symptomOrder[a.symptoms]
+      return (
+        (symptomOrder[b.symptoms] || 0) -
+        (symptomOrder[a.symptoms] || 0)
+      );
+    }
 
     case "risk":
     default:
-      return b.riskScore - a.riskScore
+      return b.riskScore - a.riskScore;
   }
-})
-
+});
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen overflow-x-hidden bg-[#f6f2e8]">
 
       {/* SIDEBAR */}
       <aside
@@ -573,23 +669,17 @@ const sortedPatients = [...patients].sort((a, b) => {
             <Home size={17} />
             <span>Dashboard</span>
           </button>
-          <button className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-200 hover:bg-[#145542]">
-            <Users size={17} />
-            <span>Patients</span>
-          </button>
-          <button className="flex items-center justify-between rounded-lg px-3 py-2.5 text-sm text-gray-200 hover:bg-[#145542]">
-            <div className="flex items-center gap-3">
-              <Bell size={17} />
-              <span>Alerts</span>
-            </div>
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#5aa47e] text-xs">
-              8
-            </span>
-          </button>
-          <button className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-200 hover:bg-[#145542]">
-            <Activity size={17} />
-            <span>Analytics</span>
-          </button>
+           <button
+  onClick={() => {
+    setPatientsExpanded(true);
+    setSidebarOpen(false);
+  }}
+  className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-200 hover:bg-[#145542]"
+>
+  <Users size={17} />
+  <span>Patients</span>
+</button>
+           
           <button className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-200 hover:bg-[#145542]">
             <FileText size={17} />
             <span>Reports</span>
@@ -604,31 +694,16 @@ const sortedPatients = [...patients].sort((a, b) => {
         {/* PUSH CONTENT TO BOTTOM */}
         <div className="flex-1" />
 
-        {/* HELP */}
-        <div className="mb-6 rounded-lg border border-[#28624f] bg-[#104d3d] p-3 text-center">
-
-          <Headphones size={17} className="mx-auto mb-2" />
-
-          <p className="text-xs font-medium">
-            Need Help?
-          </p>
-
-          <p className="mt-1 text-[10px] leading-4 text-gray-300">
-            Contact support
-            <br />
-            for any assistance.
-          </p>
-
-          <button className="mt-3 w-full rounded-md border border-[#5d9b80] px-2 py-1.5 text-[10px] hover:bg-[#28624f]">
-            Contact Support
-          </button>
-
-        </div>
+        
 
         {/* LOGOUT */}
-        <button className="flex items-center justify-center text-gray-300 hover:text-white">
-          <LogOut size={15} />
-        </button>
+         <button
+  onClick={() => navigate("/login")}
+  className="flex items-center justify-center gap-2 text-gray-300 hover:text-white"
+>
+  <LogOut size={15} />
+  <span>Logout</span>
+</button>
 
       </aside>
 
@@ -636,169 +711,352 @@ const sortedPatients = [...patients].sort((a, b) => {
       {/* RIGHT SIDE */}
       <div className="flex min-w-0 flex-1 flex-col">
 
-        {/* HEADER */}
-        <Header
-         onMenuClick={() => setSidebarOpen(!sidebarOpen)}
-        />
+       <Header
+  onMenuClick={() => setSidebarOpen(!sidebarOpen)}
+  profileOpen={profileOpen}
+  setProfileOpen={setProfileOpen}
+  onLogout={() => {
+    setProfileOpen(false);
+    navigate("/login");
+  }}
+/>
 
         {/* MAIN CONTENT */}
-   <main className="p-6">
+   <main className="min-w-0 flex-1 p-3 sm:p-4 lg:p-6">
   {/* PAGE TITLE */}
   <div className="mb-4">
     <h1 className="text-xl font-semibold text-gray-800">
       Dashboard
     </h1>
+  </div>
 
-    <p className="text-xs text-gray-500">
-      Welcome back, Dr. Sarah. Here's today's overview.
+
+ {/* ================= STATISTICS + ALERT SUMMARY ================= */}
+
+<div className="
+  grid
+  grid-cols-1
+  gap-3
+  sm:grid-cols-2
+  lg:grid-cols-3
+  xl:grid-cols-5
+">
+
+  {/* ================= TOTAL PATIENTS ================= */}
+  <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+    <p className="text-[20px] font-semibold text-gray-600">
+      Total Patients
+    </p>
+
+    <div className="mt-2 flex items-center justify-between">
+      <span className="text-2xl font-semibold text-gray-800">
+        128
+      </span>
+
+      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-green-50 text-green-700">
+        <Users size={30} />
+      </div>
+    </div>
+
+    <p className="mt-2 text-[10px] text-green-700">
+      ▲ 12 this week
     </p>
   </div>
 
 
-  {/* ================= STATISTICS CARDS ================= */}
+  {/* ================= HIGH RISK ================= */}
+  <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+    <p className="text-[20px] font-semibold text-gray-600">
+      High Risk
+    </p>
 
-  <div className="grid grid-cols-5 gap-3">
+    <div className="mt-2 flex items-center justify-between">
+      <span className="text-2xl font-semibold text-gray-800">
+        24
+      </span>
 
-    {/* Total Patients */}
-    <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-      <p className="text-[11px] font-medium text-gray-600">
-        Total Patients
+      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-red-50 text-red-600">
+        <ShieldPlus size={30} />
+      </div>
+    </div>
+
+    <p className="mt-2 text-[10px] text-gray-500">
+      18.8% of total
+    </p>
+  </div>
+
+
+  {/* ================= ON TRACK ================= */}
+  <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+    <p className="text-[20px] font-semibold text-gray-600">
+      On Track
+    </p>
+
+    <div className="mt-2 flex items-center justify-between">
+      <span className="text-2xl font-semibold text-gray-800">
+        62
+      </span>
+
+      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-green-50 text-green-700">
+        ✓
+      </div>
+    </div>
+
+    <p className="mt-2 text-[10px] text-green-700">
+      48.4% of total
+    </p>
+  </div>
+
+
+  {/* ================= ACTIVE ALERTS ================= */}
+  <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+    <p className="text-[20px] font-semibold text-gray-600">
+      Active Alerts
+    </p>
+
+    <div className="mt-2 flex items-center justify-between">
+      <span className="text-2xl font-semibold text-gray-800">
+        36
+      </span>
+
+      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-green-50 text-green-700">
+        <Bell size={30} />
+      </div>
+    </div>
+
+    <p className="mt-2 text-[10px] text-green-700">
+      View all alerts →
+    </p>
+  </div>
+
+
+  {/* ================= ALERT SUMMARY ================= */}
+  <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+
+    {/* HEADER */}
+    <div>
+      <p className="text-[20px] font-semibold text-gray-600">
+        Alert Summary
       </p>
 
-      <div className="mt-2 flex items-center justify-between">
-        <span className="text-2xl font-semibold text-gray-800">
-          128
-        </span>
-
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-green-50 text-green-700">
-          <Users size={18} />
-        </div>
-      </div>
-
-      <p className="mt-2 text-[10px] text-green-700">
-        ▲ 12 this week
+      <p className="mt-0.5 text-[10px] text-gray-500">
+        By severity
       </p>
     </div>
 
 
-    {/* High Risk */}
-    <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-      <p className="text-[11px] font-medium text-gray-600">
-        High Risk
-      </p>
+    {/* DONUT + LEGEND */}
+    <div className="mt-4 flex items-center gap-4">
 
-      <div className="mt-2 flex items-center justify-between">
-        <span className="text-2xl font-semibold text-gray-800">
-          24
-        </span>
+      {/* DONUT */}
+      <div className="relative flex h-24 w-24 shrink-0 items-center justify-center">
 
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-red-50 text-red-600">
-          <ShieldPlus size={18} />
+        <div
+          className="h-24 w-24 rounded-full"
+          style={{
+            background:
+              "conic-gradient(#dc2626 0deg 119deg, #f59e0b 119deg 271deg, #facc15 271deg 360deg)",
+          }}
+        />
+
+        <div className="absolute flex h-[64px] w-[64px] flex-col items-center justify-center rounded-full bg-white">
+          <span className="text-[20px] font-semibold text-gray-800">
+            36
+          </span>
+
+          <span className="text-[7px] text-gray-500">
+            Total Alerts
+          </span>
         </div>
+
       </div>
 
-      <p className="mt-2 text-[10px] text-gray-500">
-        18.8% of total
-      </p>
+
+      {/* LEGEND */}
+      <div className="flex min-w-0 flex-1 flex-col gap-3">
+
+        {/* CRITICAL */}
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1.5">
+            <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-red-600" />
+
+            <span className="text-[9px] text-gray-600">
+              Critical
+            </span>
+          </div>
+
+          <span className="text-[9px] font-medium text-gray-700">
+            12 (33%)
+          </span>
+        </div>
+
+
+        {/* MODERATE */}
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1.5">
+            <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-orange-400" />
+
+            <span className="text-[9px] text-gray-600">
+              Moderate
+            </span>
+          </div>
+
+          <span className="text-[9px] font-medium text-gray-700">
+            15 (42%)
+          </span>
+        </div>
+
+
+        {/* LOW */}
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1.5">
+            <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-yellow-400" />
+
+            <span className="text-[9px] text-gray-600">
+              Low
+            </span>
+          </div>
+
+          <span className="text-[9px] font-medium text-gray-700">
+            9 (25%)
+          </span>
+        </div>
+
+      </div>
+
     </div>
 
 
-    {/* Moderate Risk */}
-    <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-      <p className="text-[11px] font-medium text-gray-600">
-        Moderate Risk
-      </p>
-
-      <div className="mt-2 flex items-center justify-between">
-        <span className="text-2xl font-semibold text-gray-800">
-          42
-        </span>
-
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-yellow-50 text-yellow-600">
-          <Activity size={18} />
-        </div>
-      </div>
-
-      <p className="mt-2 text-[10px] text-green-700">
-        32.8% of total
-      </p>
-    </div>
-
-
-    {/* On Track */}
-    <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-      <p className="text-[11px] font-medium text-gray-600">
-        On Track
-      </p>
-
-      <div className="mt-2 flex items-center justify-between">
-        <span className="text-2xl font-semibold text-gray-800">
-          62
-        </span>
-
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-green-50 text-green-700">
-          ✓
-        </div>
-      </div>
-
-      <p className="mt-2 text-[10px] text-green-700">
-        48.4% of total
-      </p>
-    </div>
-
-
-    {/* Active Alerts */}
-    <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-      <p className="text-[11px] font-medium text-gray-600">
-        Active Alerts
-      </p>
-
-      <div className="mt-2 flex items-center justify-between">
-        <span className="text-2xl font-semibold text-gray-800">
-          36
-        </span>
-
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-green-50 text-green-700">
-          <Bell size={18} />
-        </div>
-      </div>
-
-      <p className="mt-2 text-[10px] text-green-700">
+    {/* BUTTON */}
+    <div className="mt-4 border-t border-gray-100 pt-2 text-center">
+      <button className="text-[9px] font-medium text-green-700 hover:text-green-800">
         View all alerts →
-      </p>
+      </button>
     </div>
 
   </div>
+
+</div>
 
 {/* ================= PATIENT QUEUE ================= */}
 <div className={patientsExpanded?"fixed inset-0 z-50 flex flex-col bg-white p-5":"mt-4 rounded-lg border border-gray-200 bg-white shadow-sm"}>
   {/* Queue Header */}
-  <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
+<div className="  border border-gray-200 bg-white shadow-sm overflow-hidden">
+
+  {/* ================= PATIENT QUEUE TOOLBAR ================= */}
+<div className="
+  flex flex-col gap-3
+  border-b border-gray-200
+  px-3 py-3
+  sm:px-5 sm:py-4
+  lg:flex-row lg:items-center lg:justify-between
+">
     <div>
-      <h2 className="text-sm font-semibold text-gray-800">Patient Queue</h2>
-      <p className="text-[10px] text-gray-500">
-        {patientsExpanded?"Detailed patient monitoring and risk overview":"All active post-discharge patients"}
+      <h2 className="text-[17px] font-semibold text-gray-900">
+        Patient Queue
+      </h2>
+
+      <p className="mt-1 text-[12px] text-gray-500">
+        All active post-discharge patients
       </p>
     </div>
-    <div className="flex items-center gap-2">
-      <select value={sortBy} onChange={(e)=>setSortBy(e.target.value)} className="h-8 cursor-pointer rounded-md border border-gray-200 bg-white px-3 text-[10px] text-gray-600 outline-none">
-        <option value="risk">Sort by: Readmission Risk</option>
-        <option value="recent">Sort by: Newest Check-in</option>
-        <option value="medication">Sort by: Medication Adherence</option>
-        <option value="symptoms">Sort by: Symptom Progression</option>
+
+    <div className="
+  flex w-full flex-col gap-2
+  sm:flex-row
+  lg:w-auto
+">
+
+      {/* Search */}
+      <div className="relative w-full sm:w-[280px] lg:w-[300px]">
+
+        <Search
+          size={17}
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+        />
+
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search patients, ID, or keywords"
+          className="
+            h-10 w-full
+            rounded-lg
+            border border-gray-200
+            bg-white
+            pl-10 pr-4
+            text-[13px]
+            text-gray-700
+            placeholder:text-gray-400
+            outline-none
+            transition
+            focus:border-emerald-500
+            focus:ring-2
+            focus:ring-emerald-100
+          "
+        />
+
+      </div>
+
+      {/* Sort */}
+     <select
+  value={sortBy}
+  onChange={(e) => setSortBy(e.target.value)}
+  className="
+    h-10 min-w-0 flex-1
+    rounded-lg border border-gray-200
+    bg-white px-2
+    text-[12px] font-medium text-gray-700
+    outline-none
+    sm:w-[250px] sm:flex-none sm:px-4 sm:text-[13px]
+  "
+>
+        <option value="risk">
+          Sort by: Readmission Risk
+        </option>
+
+        <option value="recent">
+          Sort by: Recent
+        </option>
+
+        <option value="medication">
+          Sort by: Medication Adherence
+        </option>
+
+        <option value="symptoms">
+          Sort by: Symptoms
+        </option>
       </select>
-      <button onClick={()=>setPatientsExpanded(!patientsExpanded)} className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md border border-gray-200 hover:bg-gray-50">
-        {patientsExpanded?<Minimize2 size={13}/>:<Maximize2 size={13}/>}
+
+      {/* Expand */}
+      <button
+        onClick={() => setPatientsExpanded(!patientsExpanded)}
+        className="
+    flex h-10 w-10 shrink-0
+    items-center justify-center
+    rounded-lg border border-gray-200
+    bg-white text-gray-600
+  "
+      >
+        {patientsExpanded ? (
+          <Minimize2 size={17} />
+        ) : (
+          <Maximize2 size={17} />
+        )}
       </button>
+
     </div>
+  </div>
   </div>
 
   {/* Table */}
-  <div className={patientsExpanded?"flex-1 overflow-auto":"overflow-x-auto"}>
-    <table className="w-full text-left">
+
+<div className="w-full overflow-x-auto">
+  <table className="w-full min-w-[900px] text-left">
       <thead className="sticky top-0 bg-gray-50">
-        <tr className="text-[9px] text-gray-500">
-          <th className="px-3 py-2">Patient</th>
+        <tr className="text-[11px] text-gray-500 sm:text-xs lg:text-[13px]">
+           <th className="px-3 py-2">Patient</th>
           <th className="px-3 py-2">Readmission Risk</th>
           <th className="px-3 py-2">Alerts</th>
           <th className="px-3 py-2">Days Since Discharge</th>
@@ -815,13 +1073,13 @@ const sortedPatients = [...patients].sort((a, b) => {
       </thead>
       <tbody>
         {sortedPatients.map((patient)=>(
-          <tr key={patient.id} className="border-t border-gray-100 text-[10px] hover:bg-gray-50">
+          <tr key={patient.id} className="border-t border-gray-100 text-[13px] hover:bg-gray-50">
             <td className="px-3 py-2">
               <div className="flex items-center gap-2">
                 <img src={patient.image} className="h-8 w-8 rounded-full" alt={patient.name}/>
                 <div>
                   <p className="font-semibold text-gray-800">{patient.name}</p>
-                  <p className="text-[8px] text-gray-500">ID: {patient.id}</p>
+                  <p className="text-[10px] text-gray-500">ID: {patient.id}</p>
                 </div>
               </div>
             </td>
@@ -861,7 +1119,7 @@ const sortedPatients = [...patients].sort((a, b) => {
   {/* Pagination */}
   <div className="flex items-center justify-center gap-2 border-t border-gray-100 py-3">
     <button className="rounded-md border border-gray-200 px-3 py-1 text-xs text-gray-500 hover:bg-gray-50">Previous</button>
-    <button className="h-7 w-7 rounded-md bg-green-600 text-xs text-white">1</button>
+    <button className="h-7 w-7 rounded-md bg-[#064E3B] text-xs text-white">1</button>
     <button className="h-7 w-7 rounded-md border border-gray-200 text-xs text-gray-600 hover:bg-gray-50">2</button>
     <button className="h-7 w-7 rounded-md border border-gray-200 text-xs text-gray-600 hover:bg-gray-50">3</button>
     <button className="rounded-md border border-gray-200 px-3 py-1 text-xs text-gray-500 hover:bg-gray-50">Next</button>
@@ -872,323 +1130,10 @@ const sortedPatients = [...patients].sort((a, b) => {
 
 <div className="mt-4 grid grid-cols-2 gap-3">
 
-  {/* ================= ALERT SUMMARY ================= */}
-
-  <div className="flex min-h-[260px] flex-col rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-
-    {/* HEADER */}
-    <div>
-      <h2 className="text-[12px] font-semibold text-gray-800">
-        Alert Summary
-      </h2>
-
-      <p className="mt-0.5 text-[8px] text-gray-500">
-        By severity
-      </p>
-    </div>
-
-    {/* CONTENT */}
-    <div className="flex flex-1 items-center gap-8">
-
-      {/* DONUT */}
-      <div className="relative flex h-28 w-28 shrink-0 items-center justify-center">
-
-        <div
-          className="h-28 w-28 rounded-full"
-          style={{
-            background:
-              "conic-gradient(#dc2626 0deg 119deg, #f59e0b 119deg 271deg, #facc15 271deg 360deg)",
-          }}
-        />
-
-        <div className="absolute flex h-[76px] w-[76px] flex-col items-center justify-center rounded-full bg-white">
-          <span className="text-[22px] font-semibold text-gray-800">
-            36
-          </span>
-
-          <span className="text-[7px] text-gray-500">
-            Total Alerts
-          </span>
-        </div>
-
-      </div>
-
-      {/* LEGEND */}
-      <div className="flex flex-1 flex-col gap-4">
-
-        {/* CRITICAL */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="h-2.5 w-2.5 rounded-full bg-red-600" />
-
-            <span className="text-[9px] text-gray-600">
-              Critical
-            </span>
-          </div>
-
-          <span className="text-[9px] font-medium text-gray-700">
-            12 (33%)
-          </span>
-        </div>
-
-        {/* MODERATE */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="h-2.5 w-2.5 rounded-full bg-orange-400" />
-
-            <span className="text-[9px] text-gray-600">
-              Moderate
-            </span>
-          </div>
-
-          <span className="text-[9px] font-medium text-gray-700">
-            15 (42%)
-          </span>
-        </div>
-
-        {/* LOW */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="h-2.5 w-2.5 rounded-full bg-yellow-400" />
-
-            <span className="text-[9px] text-gray-600">
-              Low
-            </span>
-          </div>
-
-          <span className="text-[9px] font-medium text-gray-700">
-            9 (25%)
-          </span>
-        </div>
-
-      </div>
-
-    </div>
-
-    {/* BUTTON */}
-    <div className="border-t border-gray-100 pt-3 text-center">
-
-      <button className="text-[9px] font-medium text-green-700 hover:text-green-800">
-        View all alerts →
-      </button>
-
-    </div>
-
-  </div>
-
-
-  {/* ================= FEATURE TRENDS ================= */}
-
-  <div className="flex min-h-[260px] flex-col rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-
-    {/* HEADER */}
-    <div>
-      <h2 className="text-[12px] font-semibold text-gray-800">
-        Feature Trends
-
-        <span className="ml-1 text-[8px] font-normal text-gray-500">
-          (Last 14 Days)
-        </span>
-      </h2>
-    </div>
-
-
-    {/* LEGEND */}
-    <div className="mt-4 grid grid-cols-3 gap-4">
-
-      {/* MEDICATION */}
-      <div>
-        <div className="flex items-center gap-2">
-          <span className="h-2.5 w-2.5 rounded-full bg-green-700" />
-
-          <span className="text-[8px] text-gray-600">
-            Medication Adherence
-          </span>
-        </div>
-
-        <p className="mt-1 ml-4 text-[10px] font-medium text-gray-700">
-          82%
-        </p>
-      </div>
-
-
-      {/* CAREGIVER */}
-      <div>
-        <div className="flex items-center gap-2">
-          <span className="h-2.5 w-2.5 rounded-full bg-green-600" />
-
-          <span className="text-[8px] text-gray-600">
-            Caregiver Support
-          </span>
-        </div>
-
-        <p className="mt-1 ml-4 text-[10px] font-medium text-gray-700">
-          68%
-        </p>
-      </div>
-
-
-      {/* SYMPTOM */}
-      <div>
-        <div className="flex items-center gap-2">
-          <span className="h-2.5 w-2.5 rounded-full bg-green-500" />
-
-          <span className="text-[8px] text-gray-600">
-            Symptom Improvement
-          </span>
-        </div>
-
-        <p className="mt-1 ml-4 text-[10px] font-medium text-gray-700">
-          72%
-        </p>
-      </div>
-
-    </div>
-
-
-    {/* TREND CHART */}
-
-    <div className="relative mt-3 flex-1 min-h-[100px]">
-
-      {/* GRID LINES */}
-      <div className="absolute left-8 right-0 top-2 border-t border-gray-100" />
-
-      <div className="absolute left-8 right-0 top-1/2 border-t border-gray-100" />
-
-      <div className="absolute left-8 right-0 bottom-5 border-t border-gray-100" />
-
-
-      {/* Y LABELS */}
-
-      <div className="absolute left-0 top-0 text-[7px] text-gray-400">
-        100%
-      </div>
-
-      <div className="absolute left-0 top-1/2 -translate-y-1/2 text-[7px] text-gray-400">
-        50%
-      </div>
-
-      <div className="absolute bottom-5 left-1 text-[7px] text-gray-400">
-        0%
-      </div>
-
-
-      {/* LINES */}
-
-      <svg
-        className="absolute left-8 top-0 h-full w-[calc(100%-32px)]"
-        viewBox="0 0 300 100"
-        preserveAspectRatio="none"
-      >
-
-        <polyline
-          points="0,30 30,27 60,29 90,24 120,26 150,21 180,24 210,20 240,22 270,19 300,18"
-          fill="none"
-          stroke="#176b50"
-          strokeWidth="2"
-        />
-
-        <polyline
-          points="0,47 30,44 60,46 90,42 120,45 150,40 180,42 210,39 240,41 270,38 300,36"
-          fill="none"
-          stroke="#3b8f6b"
-          strokeWidth="2"
-        />
-
-        <polyline
-          points="0,59 30,55 60,57 90,53 120,55 150,50 180,52 210,49 240,51 270,47 300,45"
-          fill="none"
-          stroke="#6aa982"
-          strokeWidth="2"
-        />
-
-      </svg>
-
-
-      {/* X LABELS */}
-
-      <div className="absolute bottom-0 left-9 right-0 flex justify-between text-[7px] text-gray-400">
-
-        <span>May 18</span>
-
-        <span>May 25</span>
-
-        <span>May 31</span>
-
-      </div>
-
-    </div>
-
-
-    {/* BUTTON */}
-
-    <div className="border-t border-gray-100 pt-3 text-center">
-
-      <button className="text-[9px] font-medium text-green-700 hover:text-green-800">
-        View all trends →
-      </button>
-
-    </div>
-
-  </div>
-
+ 
 </div>
 
-{/* ================= BOTTOM NAVIGATION ================= */}
-
-<div className="mt-3 rounded-lg border border-gray-200 bg-white shadow-sm">
- <div className="flex items-center justify-between px-6">
-
-    {/* OVERVIEW */}
-
-    <button
-      onClick={() => navigate("/patient/AI-AD300072/overview")}
-      className="flex items-center gap-2 px-3 py-3 text-[9px] font-medium text-green-700 hover:text-green-800">
-      <Activity size={13} />
-      <span> Overview </span>
-    </button>
-
-    {/* CALL HISTORY */}
-    <button
-      onClick={() => navigate("/patient/AI-AD300072/calls")}
-      className="flex items-center gap-2 px-3 py-3 text-[9px] text-gray-500 hover:text-green-700">
-      <Phone size={13} />
-      <span> Call History </span>
-    </button>
-
-    {/* ALERTS */}
-    <button
-      onClick={() => navigate("/patient/AI-AD300072/alerts")}
-      className="flex items-center gap-2 px-3 py-3 text-[9px] text-gray-500 hover:text-green-700">
-      <Bell size={13} />
-      <span> Alerts </span>
-    </button>
-
-    {/* FEATURES */}
-    <button
-      onClick={() => navigate("/patient/AI-AD300072/features")}
-      className="flex items-center gap-2 px-3 py-3 text-[9px] text-gray-500 hover:text-green-700">
-      <Activity size={13} />
-      <span> Features </span>
-    </button>
-
-    {/* CARE PLAN */}
-    <button
-      onClick={() => navigate("/patient/AI-AD300072/care-plan")}
-      className="flex items-center gap-2 px-3 py-3 text-[9px] text-gray-500 hover:text-green-700">
-      <FileText size={13} />
-      <span> Care Plan </span>
-    </button>
-
-    {/* DOCUMENTS */}
-    <button
-      onClick={() => navigate("/patient/AI-AD300072/documents")}
-      className="flex items-center gap-2 px-3 py-3 text-[9px] text-gray-500 hover:text-green-700">
-      <FileText size={13} />
-      <span> Documents </span>
-    </button>
-  </div>
-</div>
+ 
 
   {/* ================= PATIENT DETAIL POPUP ================= */}
 
@@ -1237,6 +1182,8 @@ function App() {
           <Route path="documents" element={<Documents />} />
 
         </Route>
+
+        <Route path="/login" element={<Login />} />
 
       </Routes>
     </BrowserRouter>
